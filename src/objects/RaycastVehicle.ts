@@ -188,8 +188,8 @@ export class RaycastVehicle {
         wheel.deltaRotation = (wheel.engineForce > 0 ? 1 : -1) * wheel.customSlidingRotationalSpeed * timeStep
       }
 
-      // Lock wheels
-      if (Math.abs(wheel.brake) > Math.abs(wheel.engineForce)) {
+      if (!wheel.antiLockBraking && Math.abs(wheel.brake) > Math.abs(wheel.engineForce)) {
+        // Lock wheels
         wheel.deltaRotation = 0
       }
 
