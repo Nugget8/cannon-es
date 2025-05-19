@@ -146,7 +146,8 @@ export class RaycastVehicle {
       if (suspensionForce > wheel.maxSuspensionForce) {
         suspensionForce = wheel.maxSuspensionForce
       }
-      wheel.raycastResult.hitNormalWorld.scale(suspensionForce * timeStep, impulse)
+      const hitNormalDotWheelUp = wheel.raycastResult.hitNormalWorld.dot(wheel.directionWorld.negate())
+      wheel.raycastResult.hitNormalWorld.scale(suspensionForce * hitNormalDotWheelUp * timeStep, impulse)
 
       wheel.raycastResult.hitPointWorld.vsub(chassisBody.position, relpos)
       chassisBody.applyImpulse(impulse, relpos)
@@ -262,15 +263,14 @@ export class RaycastVehicle {
     source.vadd(rayvector, target)
     const raycastResult = wheel.raycastResult
 
-    const param = 0
-
     raycastResult.reset()
     // Turn off ray collision with the chassis temporarily
     const oldState = chassisBody.collisionResponse
     chassisBody.collisionResponse = false
 
     // Cast ray against world
-    this.world!.rayTest(source, target, raycastResult)
+    this.world!.raycastClosest(source, target, undefined, raycastResult)
+    
     chassisBody.collisionResponse = oldState
 
     const object = raycastResult.body
