@@ -5,7 +5,6 @@ import { Ray } from '../collision/Ray'
 import { WheelInfo } from '../objects/WheelInfo'
 import type { WheelInfoOptions } from '../objects/WheelInfo'
 import type { Transform } from '../math/Transform'
-import type { Constraint } from '../constraints/Constraint'
 import type { World } from '../world/World'
 
 export type RaycastVehicleOptions = ConstructorParameters<typeof RaycastVehicle>[0]
@@ -27,8 +26,6 @@ export class RaycastVehicle {
   indexForwardAxis: number
   /** Index of the up axis. x=0, y=1, z=2 */
   indexUpAxis: number
-  /** The constraints. */
-  constraints: Constraint[]
   /** Optional pre-step callback. */
   preStepCallback: () => void
   currentVehicleSpeedKmHour: number
@@ -54,7 +51,6 @@ export class RaycastVehicle {
     this.indexRightAxis = typeof options.indexRightAxis !== 'undefined' ? options.indexRightAxis : 2
     this.indexForwardAxis = typeof options.indexForwardAxis !== 'undefined' ? options.indexForwardAxis : 0
     this.indexUpAxis = typeof options.indexUpAxis !== 'undefined' ? options.indexUpAxis : 1
-    this.constraints = []
     this.preStepCallback = () => {}
     this.update = () => {}
     this.currentVehicleSpeedKmHour = 0
@@ -95,7 +91,7 @@ export class RaycastVehicle {
   }
 
   /**
-   * Add the vehicle including its constraints to the world.
+   * Add the vehicle to the world.
    */
   addToWorld(world: World): void {
     this.world = world
@@ -239,7 +235,7 @@ export class RaycastVehicle {
   }
 
   /**
-   * Remove the vehicle including its constraints from the world.
+   * Remove the vehicle from the world.
    */
   removeFromWorld(world: World): void {
     this.world = null
